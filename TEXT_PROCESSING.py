@@ -111,3 +111,26 @@ def distance(elements,this_item,max_val):
         min_val=min(min_val,NormalizedLevenshtein().distance(x.lower(),this_item.lower()))
     return min_val>=max_val
 
+
+def generate_sentences(k, s):
+    kp = KeywordProcessor()
+    ans = {}
+    #initializing dictionary
+    for i in k:
+        i = i.strip()
+        kp.add_keyword(i)
+        ans[i] = []
+    #extracting
+    for i in s:
+        ext = kp.extract_keywords(i)
+        for j in ext:
+            ans[j].append(i)
+    #sorting and storing
+    for i in ans.keys():
+        ans[i] = sorted(ans[i], key=len, reverse=True)
+    #deleting unnecessary keys
+    dele=[k for k in ans.keys() if len(ans[k])==0]
+    for i in dele:
+      del ans[i]
+
+    return ans
