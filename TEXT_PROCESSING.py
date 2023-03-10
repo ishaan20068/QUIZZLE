@@ -51,3 +51,63 @@ def one_apart(token):
             final_tokens.append(fin_token)
     
     return set(final_tokens)
+
+def words_similar(token, sense_object):
+    '''
+    Takes a word and returns all the words in the database that are similar to the given word
+    with the same sense. In case of multiple words it returns at most 15 words ordered in 
+    descending order by their closeness. The best match word comes before.
+    '''
+    result = []
+    processed_tokens = token.translate(token.maketrans("","", string.punctuation)).lower()
+
+    token_edits = one_apart(processed_tokens)
+    token = token.replace(" ", "_")
+    sense = sense_object.get_best_sense(token)
+
+    if sense == None:
+        return None, "None"
+    
+    similar_tokens = sense_object.most_similar(sense, n = 15)
+    cmp_lst = []
+    cmp_lst.append(processed_tokens)
+
+    for each_token in similar_tokens:
+        temp = each_token[0].split("|")[0].replace("_", " ")
+        temp = temp.strip().lower()
+        temp = temp.translate(temp.maketrans("","", string.punctuation))
+        if temp not in cmp_lst:
+            if processed_tokens not in temp:
+                if temp not in token_edits:
+                    result.append(temp.title())
+                    cmp_lst.append(temp)
+    
+    out = list(OrderedDict.fromkeys(result))
+
+    return out, "sense2vec"
+
+
+def para_to_sentences(text):
+    ''' 
+    function takes text as a input string and performs string tokenization on it
+    and returns the list of sentences
+    '''
+    sent = sent_tokenize(text)
+    fin_sent = []
+    for i in sent:
+        if len(i) > 20:
+            fin_sent.append(i)
+    
+    return fin_sent
+
+
+def distance(elements,this_item,max_val):
+    '''
+    Calculates the normalized edit distance between the currentword and elements of words_list.
+    if all the words have a distance greater than a threshhold then returns true else false
+    '''
+    min_val=1000000000
+    for x in elements:
+        min_val=min(min_val,NormalizedLevenshtein().distance(x.lower(),this_item.lower()))
+    return min_val>=max_val
+
