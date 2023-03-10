@@ -153,3 +153,26 @@ def select_main(ph_keys, max_phrases):
             break
     return ans
 
+
+def find_subjects(text):
+    """
+    Extract the top 10 noun and proper noun phrases from a text using the MultipartiteRank algorithm.
+    Args:
+        text (str): The input text.
+    Returns:
+        list: The top 10 noun and proper noun phrases extracted from the text.
+    """
+    ans = []
+
+    try:
+        e = pke.unsupervised.MultipartiteRank()
+        e.load_document(input=text, language='en',stoplist=list(string.punctuation) + stopwords.words('english'))
+        e.candidate_selection(pos={'PROPN', 'NOUN'})
+        e.candidate_weighting(alpha=1.1, threshold=0.75, method='average')
+        keyph = e.get_n_best(n=10)
+        ans=[key[0] for key in keyph]
+    except:
+        pass
+
+    return ans
+
