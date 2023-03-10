@@ -176,3 +176,48 @@ def find_subjects(text):
 
     return ans
 
+def generate_phrasal_words(doc):
+    """
+    Extract up to 50 longest noun phrases from a spaCy document object.
+    Args:
+        doc (spacy.tokens.Doc): The spaCy document object.
+    Returns:
+        list: The up to 50 most frequent noun phrases in the document.
+    """
+    ph = {}
+    for noun in doc.noun_chunks:
+        p = noun.text
+        if len(p.split()) > 1:
+            if p not in ph:
+                ph[p] = 1
+            else:
+                ph[p] += 1
+
+    ph_keys = sorted(list(ph.keys()), key=lambda x: len(x), reverse=True)[:50]
+    return ph_keys
+
+def find_keys(nlp, text, max, s2v, fd, nos):
+    """
+    Extract up to max_keywords keywords from a given text using a combination of
+    approaches, including MultipartiteRank, noun phrases, and filtering.
+    Args:
+        nlp : The  model to use for text processing.
+        text (str): The input text to extract keywords from.
+        max (int): The maximum number of keywords to return.
+        s2v : The sense2vec model to use for filtering out irrelevant keywords.
+        fd : A frequency distribution of words in the text.
+        nos (int): The number of sentences in the input text.
+    Returns:
+        list: The up to max_keywords most relevant keywords extracted from the text.
+    """
+
+    tp = select_main(sorted(find_subjects(text), key=lambda x: fd[x]), int(max)) + select_main(generate_phrasal_words(nlp(text)), int(max))
+
+    tpf = select_main(tp, min(int(max), 2*nos))
+
+    ans = []
+    for answer in tpf:
+        if answer not in ans:
+          if is_possible(answer, s2v):
+            ans.append(answer)
+    return ans[:int(max)]
