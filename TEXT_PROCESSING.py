@@ -134,3 +134,22 @@ def generate_sentences(k, s):
       del ans[i]
 
     return ans
+
+
+def select_main(ph_keys, max_phrases):
+    """
+    Filter a list of phrases to a maximum number based on a scoring metric.
+    Args:
+        ph_keys (list): A list of phrases to filter.
+        max_phrases (int): The maximum number of phrases to return.
+    Returns:
+        list: The filtered list of phrases, containing at most max_phrases phrases.
+    """
+    ans = [ph_keys[0]] if len(ph_keys) > 0 else []
+    for phrase in ph_keys[1:]:
+        if distance(ans, phrase, 0.71) and len(ans) < max_phrases:
+            ans.append(phrase)
+        if len(ans) >= max_phrases:
+            break
+    return ans
+
