@@ -52,39 +52,42 @@ def one_apart(token):
     
     return set(final_tokens)
 
-def words_similar(token, sense_object):
+def generate_choices(token, sense_object):
     '''
-    Takes a word and returns all the words in the database that are similar to the given word
-    with the same sense. In case of multiple words it returns at most 15 words ordered in 
-    descending order by their closeness. The best match word comes before.
+    Takes the token and sense_object as input and returns the list of possible choices for the token.
+    Uses sense2vec to generate the choices, after that it uses the one_apart function to generate the choices. 
+    Uses try and except to handle the exceptions arising from sense2vec library and spacy version incompatibility in most_similar function.
     '''
-    result = []
-    processed_tokens = token.translate(token.maketrans("","", string.punctuation)).lower()
+    choices = []
+    try:
+        processed_tokens = token.translate(token.maketrans("","", string.punctuation)).lower()
+        token_edits = one_apart(processed_tokens)
+        token = token.replace(" ", "_")
+        sense = sense_object.get_best_sense(token)
+        similar_tokens = sense_object.most_similar(sense, n = 15)
+        corelated_words = []
+        corelated_words.append(processed_tokens)
 
-    token_edits = one_apart(processed_tokens)
-    token = token.replace(" ", "_")
-    sense = sense_object.get_best_sense(token)
+        for each_token in similar_tokens:
+            temp = each_token[0]
+            temp = temp.split("|")[0].replace("_", " ")
+            temp = temp.strip()
+            processed_token = temp.lower().translate(temp.maketrans("","", string.punctuation))
+            if processed_token not in corelated_words:
+                if processed_tokens not in processed_token:
+                    if processed_token not in token_edits:
+                        corelated_words.append(processed_token)
+                        choices.append(temp.title())
+        choices = OrderedDict.fromkeys(choices)
+        choices = list(choices)
 
-    if sense == None:
-        return None, "None"
-    
-    similar_tokens = sense_object.most_similar(sense, n = 15)
-    cmp_lst = []
-    cmp_lst.append(processed_tokens)
+        if len(choices) > 0:
+            print("Sense2vec successful for word : ", token)
+            return choices, "sense2vec"
+    except:
+        print("Sense2vec failed for word : ", token)
+    return choices, "None"
 
-    for each_token in similar_tokens:
-        temp = each_token[0].split("|")[0].replace("_", " ")
-        temp = temp.strip().lower()
-        temp = temp.translate(temp.maketrans("","", string.punctuation))
-        if temp not in cmp_lst:
-            if processed_tokens not in temp:
-                if temp not in token_edits:
-                    result.append(temp.title())
-                    cmp_lst.append(temp)
-    
-    out = list(OrderedDict.fromkeys(result))
-
-    return out, "sense2vec"
 
 
 def para_to_sentences(text):
