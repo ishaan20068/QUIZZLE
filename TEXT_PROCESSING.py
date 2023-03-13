@@ -1,3 +1,6 @@
+print("Importing libraries...")
+print("This will take time. Please wait...")
+
 import string
 from flashtext import KeywordProcessor
 from sense2vec import Sense2Vec
@@ -82,10 +85,10 @@ def generate_choices(token, sense_object):
         choices = list(choices)
 
         if len(choices) > 0:
-            print("Sense2vec successful for word : ", token)
+            print("Similar choices genertated for answer: ", token)
             return choices, "sense2vec"
     except:
-        print("Sense2vec failed for word : ", token)
+        print("Similar choices could not be generated for answer: ", token)
     return choices, "None"
 
 
