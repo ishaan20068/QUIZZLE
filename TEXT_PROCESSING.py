@@ -227,3 +227,46 @@ def find_keys(nlp, text, max, s2v, fd, nos):
           if is_possible(answer, s2v):
             ans.append(answer)
     return ans[:int(max)]
+
+def MCQs_formulate(keyword_sent_mapping, sense2vec):
+    '''
+    function takes keyword_sent_mapping as a dictionary and sense2vec model as input
+    and returns the list of questions and answers in the form of a dictionary along with the choices and reason for the answer.
+    Uses T5 model for question generation and spacy for answer extraction and choice generation, 
+    and sense2vec for filtering out irrelevant keywords.
+    Also uses nltk for sentence tokenization and wordnet for synonym generation.
+    '''
+
+    tokenizer = T5Tokenizer.from_pretrained('t5-base')
+    model = T5ForConditionalGeneration.from_pretrained('Parth/result')
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.to(device)
+    
+    questions = []
+    
+    for answer, text in keyword_sent_mapping.items():
+        question_context = "context: " + text + " " + "answer: " + answer + " </s>"
+        encoding = tokenizer.encode_plus(question_context, padding=True, truncation=True, return_tensors="pt")
+        with torch.no_grad():
+            output = model.generate(input_ids=encoding["input_ids"].to(device), 
+                                    attention_mask=encoding["attention_mask"].to(device), 
+                                    max_length=150)
+        question = tokenizer.decode(output[0], skip_special_tokens=True).replace("question:", "").strip()
+        choices, algorithm = generate_choices(answer, sense2vec)
+        #diffiiculty level can be set here based on algorithm used
+        if(len(choices) < 3):
+            continue
+        additional_choices = choices[3:]
+        choices = choices[:3]
+        choices.append(answer)
+        random.shuffle(choices)
+        question_data = {
+            "question": question,
+            "answer": answer,
+            "choices": choices,
+            "additional_choices": additional_choices,
+            "reasoning": text
+        }
+        questions.append(question_data)
+        
+    return questions
