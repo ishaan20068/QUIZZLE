@@ -1,0 +1,43 @@
+The quiz will be based on the following content
+Diophantus, the “father of algebra,” is best known for his book Arithmetica, a work on the solution of algebraic equations and the theory of numbers. However, essentially nothing is known of his life, and there has been much debate regarding precisely the years in which he lived. Diophantus did his work in the great city of Alexandria. At this time, Alexandria was the center of mathematical learning. The period from 250 bce to 350 ce in Alexandria is known as the Silver Age, also the Later Alexandrian Age. This was a time when mathematicians were discovering many ideas that led to our current conception of mathematics. The era is considered silver because it came after the Golden Age, a time of great development in the field of mathematics. This Golden Age encompasses the lifetime of Euclid.
+The quiz will have the following questions
+
+Q)  What field of study was the Golden Age?
+Choices are: 
+a. Mathematical Logic
+b. Physical Science
+c. Theoretical Physics
+d. mathematics
+Additional choices are: 
+Other Sciences, Number Theory, Formal Logic, Mathematical Proofs, Modern Physics, Calculus, Probability Theory, Physical Sciences, Quantum Physics, 
+Correct answer is:  mathematics
+Reasoning for the answer is: 
+The era is considered silver because it came after the Golden Age, a time of great development in the field of mathematics. This was a time when mathematicians were discovering many ideas that led to our current conception of mathematics.
+----------------------------------------------------------------------------------------------------
+
+Q)  What was Alexandria the center of at this time?
+Choices are: 
+a. Learnt
+b. Basics
+c. Learn
+d. learning
+Additional choices are: 
+Teaching, New Languages, New Language, Learned, Good Grasp, Solid Grasp, Familiarizing, 
+Correct answer is:  learning
+Reasoning for the answer is: 
+At this time, Alexandria was the center of mathematical learning.
+----------------------------------------------------------------------------------------------------
+
+Q)  What was Alexandria's role in mathematical learning?
+Choices are: 
+a. Opposite Side
+b. center
+c. Outer Edge
+d. Furthest
+Additional choices are: 
+Opposite, Perpendicular, Triangle, Farthest, 
+Correct answer is:  center
+Reasoning for the answer is: 
+At this time, Alexandria was the center of mathematical learning.
+----------------------------------------------------------------------------------------------------
+
