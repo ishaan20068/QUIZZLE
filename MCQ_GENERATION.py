@@ -199,7 +199,7 @@ def MCQs_formulate(keyword_sent_mapping, sense2vec):
     '''
 
     tokenizer = T5Tokenizer.from_pretrained('t5-base')
-    model = T5ForConditionalGeneration.from_pretrained('Parth/result')
+    model = T5ForConditionalGeneration.from_pretrained('ramsrigouthamg/t5_squad_v1')
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     
@@ -210,8 +210,12 @@ def MCQs_formulate(keyword_sent_mapping, sense2vec):
         encoding = tokenizer.encode_plus(question_context, padding=True, truncation=True, return_tensors="pt")
         with torch.no_grad():
             output = model.generate(input_ids=encoding["input_ids"].to(device), 
-                                    attention_mask=encoding["attention_mask"].to(device), 
-                                    max_length=150)
+                                    attention_mask=encoding["attention_mask"].to(device),
+                                    early_stopping=True,
+                                    num_beams=5,
+                                    num_return_sequences=1,
+                                    no_repeat_ngram_size=2,
+                                    max_length=200)
         question = tokenizer.decode(output[0], skip_special_tokens=True).replace("question:", "").strip()
         choices, algorithm = generate_choices(answer, sense2vec)
         #diffiiculty level can be set here based on algorithm used
