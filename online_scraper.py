@@ -1,16 +1,24 @@
-import requests
-from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-def scrape(text):
-    text=text.replace(" ","_")
-    search_string="https://en.wikipedia.org/wiki/"+text
-    print(search_string)
-    webpage=BeautifulSoup((requests.get(search_string)).content, 'html.parser')
-    list(webpage.children)
-    sentences=webpage.find_all('p')
-    final_text=""
-    for i in range(len(sentences)):
-        final_text+=sentences[i].get_text()
-    return final_text
+# Create a new ChromeDriver instance
+driver = webdriver.Chrome()
 
-print(scrape("photosynthesis"))
+# Navigate to the URL
+driver.get('https://www.wolframalpha.com/problem-generator/quiz/?category=Calculus&topic=TrigSubIntegrate')
+
+# Wait for the page to load
+try:
+    wait = WebDriverWait(driver, 10)
+    wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'blahblah')))
+except:
+    print("TimedOut")
+
+page_source = driver.page_source
+# Close the browser
+driver.quit()
+# print(page_source)
+
+print(type(page_source))
