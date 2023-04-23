@@ -43,7 +43,7 @@ def start_generating_quiz(quiz_content,key):
 
     return quiz
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 @app.route('/')
 def index():
@@ -134,5 +134,5 @@ def uu():
             c.append((k[0],"Answer = "+k[1]))
         return render_template("short.html",e=c)
     return 1
-if _name=="main_":
+if __name__=="__main__":
     app.run(debug=True)
