@@ -19,6 +19,7 @@ import sys
 import openai
 import MCQ_GENERATION as mcq
 import Descriptive_Ques as dq
+import fill_ups as fups
 
 openai.api_key = "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"
 
@@ -41,6 +42,8 @@ def start_generating_quiz(quiz_content, quiz_type):
         quiz= mcq.MCQs_formulate(ksm,s2v)
     elif quiz_type == 1:
         quiz = dq.generate_descriptive(ksm)
+    elif quiz_type == 2:
+        quiz = fups.generate_fillups(ksm)
     else:
         pass
     
@@ -63,9 +66,13 @@ def interface():
     quiz_content+="because it came after the Golden Age, a time of great development in the field "
     quiz_content+="of mathematics. This Golden Age encompasses the lifetime of Euclid."
     quiz_content = "Photosynthesis definition states that the process exclusively takes place in the chloroplasts through photosynthetic pigments such as chlorophyll a, chlorophyll b, carotene and xanthophyll. All green plants and a few other autotrophic organisms utilize photosynthesis to synthesize nutrients by using carbon dioxide, water and sunlight. The by-product of the photosynthesis process is oxygen.Let us have a detailed look at the process, reaction and importance of photosynthesis. Photosynthesis reaction involves two reactants, carbon dioxide and water. These two reactants yield two products, namely, oxygen and glucose. Hence, the photosynthesis reaction is considered to be an endothermic reaction."
-    # mcq_quiz = start_generating_quiz(quiz_content, 0)
+    quiz_content = "There is a lot of volcanic activity at divergent plate boundaries in the oceans. For example, many undersea volcanoes are found along the Mid-Atlantic Ridge. This is a divergent plate boundary that runs north-south through the middle of the Atlantic Ocean. As tectonic plates pull away from each other at a divergent plate boundary, they create deep fissures, or cracks, in the crust. Molten rock, called magma, erupts through these cracks onto Earth’s surface. At the surface, the molten rock is called lava. It cools and hardens, forming rock. Divergent plate boundaries also occur in the continental crust. Volcanoes form at these boundaries, but less often than in ocean crust. That’s because continental crust is thicker than oceanic crust. This makes it more difficult for molten rock to push up through the crust. Many volcanoes form along convergent plate boundaries where one tectonic plate is pulled down beneath another at a subduction zone. The leading edge of the plate melts as it is pulled into the mantle, forming magma that erupts as volcanoes. When a line of volcanoes forms along a subduction zone, they make up a volcanic arc. The edges of the Pacific plate are long subduction zones lined with volcanoes. This is why the Pacific rim is called the Pacific Ring of Fire."
     mcq_quiz = None
-    desc_quiz = start_generating_quiz(quiz_content, 1)
+    desc_quiz = None
+    fill_ups_quiz = None
+    # mcq_quiz = start_generating_quiz(quiz_content, 0)
+    # desc_quiz = start_generating_quiz(quiz_content, 1)
+    fill_ups_quiz = start_generating_quiz(quiz_content, 2)
     print("Would you like to save the quiz content and questions to a file? (y/n)")
     save = input()
     with open("quiz.txt", "w") as f:
@@ -96,6 +103,12 @@ def interface():
                 print()
         if desc_quiz is not None:
             for question in desc_quiz:
+                print("Q) ", question[0])
+                print("Ans: ", question[1])
+                print("-"*100)
+                print()
+        if fill_ups_quiz is not None:
+            for question in fill_ups_quiz:
                 print("Q) ", question[0])
                 print("Ans: ", question[1])
                 print("-"*100)
