@@ -1,4 +1,4 @@
-from flask import Flask , render_template, url_for, request
+from flask import Flask , render_template, url_for, request,redirect
 print("Importing libraries...")
 print("This will take time. Please wait...")
 
@@ -20,6 +20,7 @@ import sys
 import openai
 import MCQ_GENERATION as mcq
 import Descriptive_Ques as dq
+import fill_ups as fp
 global c
 
 openai.api_key = "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"
@@ -40,14 +41,19 @@ def start_generating_quiz(quiz_content,key):
         quiz= mcq.MCQs_formulate(ksm,s2v)
     elif key==2:
         quiz= dq.generate_descriptive(ksm)
+    elif key==3:
+        quiz=fp.generate_fillups(ksm)
 
     return quiz
-
 app = Flask(__name__)
 
 @app.route('/')
 def index():
+    return render_template('b_index.html')
+@app.route("/quiz")
+def quiz():
     return render_template('quiz.html')
+
 @app.route("/uploading_text")
 def uploading_text():
     return render_template('uploading_text.html')
@@ -64,6 +70,12 @@ def up():
         return render_template("mcq.html",e=c)
     elif request.form["fruit"]=="mango":
         d=start_generating_quiz(t,2)
+        c=[]
+        for k in d:
+            c.append((k[0],"Answer = "+k[1]))
+        return render_template("short.html",e=c)
+    elif request.form["fruit"]=="guava":
+        d=start_generating_quiz(t,3)
         c=[]
         for k in d:
             c.append((k[0],"Answer = "+k[1]))
@@ -101,6 +113,12 @@ def u():
         for k in d:
             c.append((k[0],"Answer = "+k[1]))
         return render_template("short.html",e=c)
+    elif request.form["fruit"]=="guava":
+        d=start_generating_quiz(t,3)
+        c=[]
+        for k in d:
+            c.append((k[0],"Answer = "+k[1]))
+        return render_template("short.html",e=c)
     return 1
 
 @app.route("/uploading_lecture")
@@ -133,6 +151,13 @@ def uu():
         for k in d:
             c.append((k[0],"Answer = "+k[1]))
         return render_template("short.html",e=c)
+    elif request.form["fruit"]=="guava":
+        d=start_generating_quiz(text,3)
+        c=[]
+        for k in d:
+            c.append((k[0],"Answer = "+k[1]))
+        return render_template("short.html",e=c)
     return 1
 if __name__=="__main__":
     app.run(debug=True)
+
