@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Uploading Lecture</title>
+</head>
+    <body>
+        <h1>Uploading Text</h1>
+        <form action="#" method="post" enctype="multipart/form-data">
+            
+            <p>Enter keywords to create a quiz.</p>
+            <input type="text" name="text" id="myText" placeholder="Enter text here">
+            <br><br>
+            <div>
+                <label>Choose the type of question you want to generate</label>
+            </div>
+            <select name="fruit">
+                
+            <option value="apple">MCQ</option>
+            <option value="banana">True/False</option>
+            <option value="mango">Short Answers</option>
+            </select>
+            
+            <div id="customFruit" style="display: none;">
+            <label for="customFruitInput">Enter a custom fruit:</label>
+            <input type="text" id="customFruitInput" name="customFruitInput">
+            </div>
+            
+            <script>
+            const fruitSelect = document.querySelector('select[name="fruit"]');
+            const customFruitDiv = document.querySelector('#customFruit');
+            
+            fruitSelect.addEventListener('change', function() {
+                if (fruitSelect.value === 'custom') {
+                customFruitDiv.style.display = 'block';
+                } else {
+                customFruitDiv.style.display = 'none';
+                }
+            });
+            </script>
+            <br><br><br>
+            <input type="submit" value="Generate Quiz" name="submit">
+        </form>
+    </body>
+</html>
