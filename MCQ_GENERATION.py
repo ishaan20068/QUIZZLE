@@ -245,12 +245,12 @@ def MCQs_formulate(keyword_sent_mapping, sense2vec):
                 answer = ques_ans.split("Answer: ")[1]
                 question = ques_ans.split("Question: ")[1].split("?")[0]
                 # answer = generate_questions(question, "")
-            """ print("\n\n")
+            print("\n\n")
             print("#############################################")
             print(text)
             print(question)
             print("------------>Answer:",answer, "length: ", len(answer.split()))
-            print("#############################################") """
+            print("#############################################")
             
 
             """ question_context = "Statement: " + text + " " + "Answer: " + answer + " </s>"
@@ -283,5 +283,5 @@ def MCQs_formulate(keyword_sent_mapping, sense2vec):
                 "reasoning": text
             }
             questions.append(question_data)
-        print("Generated", len(questions), "questions")
-        return questions
+    print("Generated", len(questions), "questions")
+    return questions
