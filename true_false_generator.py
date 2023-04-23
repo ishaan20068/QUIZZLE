@@ -1,11 +1,9 @@
 from sentence_transformers import SentenceTransformer
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 import torch
-import tensorflow as tf
 import scipy
 text = "There is a lot of volcanic activity at divergent plate boundaries in the oceans. For example, many undersea volcanoes are found along the Mid-Atlantic Ridge. This is a divergent plate boundary that runs north-south through the middle of the Atlantic Ocean. As tectonic plates pull away from each other at a divergent plate boundary, they create deep fissures, or cracks, in the crust. Molten rock, called magma, erupts through these cracks onto Earth’s surface. At the surface, the molten rock is called lava. It cools and hardens, forming rock. Divergent plate boundaries also occur in the continental crust. Volcanoes form at these boundaries, but less often than in ocean crust. That’s because continental crust is thicker than oceanic crust. This makes it more difficult for molten rock to push up through the crust. Many volcanoes form along convergent plate boundaries where one tectonic plate is pulled down beneath another at a subduction zone. The leading edge of the plate melts as it is pulled into the mantle, forming magma that erupts as volcanoes. When a line of volcanoes forms along a subduction zone, they make up a volcanic arc. The edges of the Pacific plate are long subduction zones lined with volcanoes. This is why the Pacific rim is called the Pacific Ring of Fire."
 from summa.summarizer import summarize
-import string
 import nltk
 import re
 import random
@@ -28,8 +26,6 @@ def traverse(sent,np,vp):
     return traverse(end,np,vp)
 def generate_true_false(text):
     nlp = spacy.load('en_core_web_sm')
-    #nltk.download('punkt')
-    #benepar.download('benepar_en3')
     benepar_parser = benepar.Parser("benepar_en3")
     text_tokens=nltk.tokenize.sent_tokenize(summarize(text,0.35))
     l=[]
@@ -96,4 +92,14 @@ def generate_true_false(text):
             sds=sorted(ds,key=len)
             sds=sds[:3]
             dq[sent]=sds
-    return(dq)
+    list_of_q=[]
+    for i in dq:
+        if len(dq[i])==0:
+            continue
+        else:
+            true_or_false=random.randint(0,1)
+            if true_or_false==1:
+                list_of_q.append((i,"true"))
+            else:
+                list_of_q.append((dq[i][0],"false"))
+    return list_of_q

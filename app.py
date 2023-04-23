@@ -21,6 +21,7 @@ import openai
 import MCQ_GENERATION as mcq
 import Descriptive_Ques as dq
 import fill_ups as fp
+import true_false_generator as tf
 global c
 
 openai.api_key = "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"
@@ -43,7 +44,8 @@ def start_generating_quiz(quiz_content,key):
         quiz= dq.generate_descriptive(ksm)
     elif key==3:
         quiz=fp.generate_fillups(ksm)
-
+    elif key==4:
+        quiz=tf.generate_true_false(ksm)
     return quiz
 app = Flask(__name__)
 
@@ -57,6 +59,17 @@ def quiz():
 @app.route("/uploading_text")
 def uploading_text():
     return render_template('uploading_text.html')
+
+@app.route("/quiz_using_maths")
+def quiz_using_maths():
+    return render_template('quiz_using_maths.html')
+
+@app.route("/quiz_using_maths", methods=['POST'])
+def upp():
+    n_q = request.form['NoOfQuestions']
+    print('--------------->',n_q)
+    
+    return 1
 
 @app.route("/uploading_text", methods=['POST'])
 def up():
@@ -76,6 +89,11 @@ def up():
         return render_template("short.html",e=c)
     elif request.form["fruit"]=="guava":
         d=start_generating_quiz(t,3)
+        c=[]
+        for k in d:
+            c.append((k[0],"Answer = "+k[1]))
+    elif request.form["fruit"]=="banana":
+        d=start_generating_quiz(t,4)
         c=[]
         for k in d:
             c.append((k[0],"Answer = "+k[1]))
@@ -119,6 +137,12 @@ def u():
         for k in d:
             c.append((k[0],"Answer = "+k[1]))
         return render_template("short.html",e=c)
+    elif request.form["fruit"]=="banana":
+        d=start_generating_quiz(t,4)
+        c=[]
+        for k in d:
+            c.append((k[0],"Answer = "+k[1]))
+        return render_template("short.html",e=c)
     return 1
 
 @app.route("/uploading_lecture")
@@ -153,6 +177,12 @@ def uu():
         return render_template("short.html",e=c)
     elif request.form["fruit"]=="guava":
         d=start_generating_quiz(text,3)
+        c=[]
+        for k in d:
+            c.append((k[0],"Answer = "+k[1]))
+        return render_template("short.html",e=c)
+    elif request.form["fruit"]=="banana":
+        d=start_generating_quiz(t,4)
         c=[]
         for k in d:
             c.append((k[0],"Answer = "+k[1]))
