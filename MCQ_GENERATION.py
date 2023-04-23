@@ -46,10 +46,10 @@ def generate_choices(token, sense_object):
         choices = list(choices)
 
         if len(choices) > 0:
-            # print("Similar choices genertated for answer: ", token)
+            print("Similar choices genertated for answer: ", token)
             return choices, "sense2vec"
     except:
-        # print("Similar choices could not be generated for answer: ", token)
+        print("Similar choices could not be generated for answer: ", token)
         pass
     
     return choices, "None"
@@ -191,16 +191,7 @@ def find_keys(nlp, text, max, s2v, fd, nos):
             ans.append(answer)
     return ans[:int(max)]
 
-def generate_questions(input_prompt):
-    template = """
-    Sentence: India won the 1983 Cricket World Cup which was the 3rd edition of the Cricket World Cup tournament.
-    Question: Who won the 1983 Cricket World Cup ______ ? Answer: India
-    Sentence: Google was founded on September 4, 1998, by Larry Page and Sergey Brin.
-    Question: In which year was Google founded ______? Answer: 1998
-    Sentence: Diophantus, the father of algebra, is best known for his book Arithmetica, a work on the solution of algebraic equations and the theory of numbers. Diophantus did his work in the great city of Alexandria.
-    Question: For which book is Diophantus famous ______? Answer: Arithmetica.
-    """
-
+def generate_questions(input_prompt, template):
     input_prompt = "Sentence: " + input_prompt
     prompt = template + input_prompt
 
@@ -234,46 +225,63 @@ def MCQs_formulate(keyword_sent_mapping, sense2vec):
     model.to(device) """
     
     questions = []
-    
-    for term, text in keyword_sent_mapping.items():
-        ques_ans = generate_questions(text)
-        
-        #Answer is the keyword after "Answer:" and question is the sentence after "Question:" and before "?". Check if they exist and extract them.
-        if ques_ans is not None and "Answer:" in ques_ans and "Question:" in ques_ans:
-            answer = ques_ans.split("Answer: ")[1]
-            question = ques_ans.split("Question: ")[1].split("?")[0]
-        print("#############################################")
-        print(question)
-        print(answer)
-        print("#############################################")
-        
+    template = """Sentence: India won the 1983 Cricket World Cup which was the 3rd edition of the Cricket World Cup tournament.
+    Question: Who won the 1983 Cricket World Cup ? Answer: India
+    Sentence: Google was founded on September 4, 1998, by Larry Page and Sergey Brin.
+    Question: In which year was Google founded ? Answer: 1998
+    Sentence: Covid-19 was a pandemic that started in 2019 from Wuhan, China. It was caused by the SARS-CoV-2 virus. 
+    Question: What was the name of the virus that caused Covid-19 ? Answer: SARS-CoV-2
+    Sentence: The 2020 Summer Olympics was postponed to 2021 due to the Covid-19 pandemic.
+    Question: Why was the 2020 Summer Olympics postponed ? Answer: Covid-19
+    Sentence: Shakespeare was an English playwright, poet, and actor, widely regarded as the greatest writer in the English language and the world's greatest dramatist. His famous works include Hamlet, Romeo and Juliet, Macbeth, Othello, Julius Caesar and King Lear.
+    Question: Who wrote Hamlet ? Answer: Shakespeare
+    """
+    print("Generating questions...")
+    while(len(questions) < 3):
+        for term, text in keyword_sent_mapping.items():
+            ques_ans = generate_questions(text, template)
+            #Answer is the keyword after "Answer:" and question is the sentence after "Question:" and before "?". Check if they exist and extract them.
+            if ques_ans is not None and "Answer:" in ques_ans and "Question:" in ques_ans:
+                answer = ques_ans.split("Answer: ")[1]
+                question = ques_ans.split("Question: ")[1].split("?")[0]
+                # answer = generate_questions(question, "")
+            """ print("\n\n")
+            print("#############################################")
+            print(text)
+            print(question)
+            print("------------>Answer:",answer, "length: ", len(answer.split()))
+            print("#############################################") """
+            
 
-        """ question_context = "Statement: " + text + " " + "Answer: " + answer + " </s>"
-        encoding = tokenizer.encode_plus(question_context, padding=True, truncation=True, return_tensors="pt")
-        with torch.no_grad():
-            output = model.generate(input_ids=encoding["input_ids"].to(device), 
-                                    attention_mask=encoding["attention_mask"].to(device),
-                                    early_stopping=True,
-                                    num_beams=5,
-                                    num_return_sequences=1,
-                                    no_repeat_ngram_size=2,
-                                    max_length=200)
-        question = tokenizer.decode(output[0], skip_special_tokens=True).replace("question:", "").strip() """
-        choices, algorithm = generate_choices(answer, sense2vec)
-        #diffiiculty level can be set here based on algorithm used
-        if(len(choices) < 3):
-            continue
-        additional_choices = choices[3:]
-        choices = choices[:3]
-        choices.append(answer)
-        random.shuffle(choices)
-        question_data = {
-            "question": question,
-            "answer": answer,
-            "choices": choices,
-            "additional_choices": additional_choices,
-            "reasoning": text
-        }
-        questions.append(question_data)
-        
-    return questions
+            """ question_context = "Statement: " + text + " " + "Answer: " + answer + " </s>"
+            encoding = tokenizer.encode_plus(question_context, padding=True, truncation=True, return_tensors="pt")
+            with torch.no_grad():
+                output = model.generate(input_ids=encoding["input_ids"].to(device), 
+                                        attention_mask=encoding["attention_mask"].to(device),
+                                        early_stopping=True,
+                                        num_beams=5,
+                                        num_return_sequences=1,
+                                        no_repeat_ngram_size=2,
+                                        max_length=200)
+            question = tokenizer.decode(output[0], skip_special_tokens=True).replace("question:", "").strip() """
+            if(len(answer.split())!=1):
+                continue
+            print("Generating choices for answer:", answer)
+            choices, algorithm = generate_choices(answer, sense2vec)
+            #diffiiculty level can be set here based on algorithm used
+            if(len(choices) < 3):
+                continue
+            additional_choices = choices[3:]
+            choices = choices[:3]
+            choices.append(answer)
+            random.shuffle(choices)
+            question_data = {
+                "question": question,
+                "answer": answer,
+                "choices": choices,
+                "additional_choices": additional_choices,
+                "reasoning": text
+            }
+            questions.append(question_data)
+        print("Generated", len(questions), "questions")
+        return questions
