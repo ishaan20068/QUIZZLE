@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Uploading Lecture</title>
+</head>
+    <body>
+        <ul>
+            {% for k in e %}
+               <li>{{k[0]}}</li>
+               <li>{{k[2]}}</li>
+               <li>{{k[3]}}</li>
+               <li>{{k[4]}}</li>
+               <li>{{k[5]}}</li>
+               <li>{{"  "}}</li>
+            {% endfor %}
+
+        </ul>
+        <form>
+            <button onclick="togglecontent('ans')">Answer</button>
+            <hr>
+            <div id="ans" style="visibility: hidden">
+                <ul>
+                    {% for k in e %}
+                       <li>{{k[1]}}</li>
+                       <li>{{"  "}}</li>
+                    {% endfor %}
+        
+                </ul>
+
+            </div>
+            <script>
+                function togglecontent(id){
+                    event.preventDefault();
+                    var e=document.getElementById(id);
+                    if(e.style.visibility== null || e.style.visibility=="hidden"){
+                        e.style.visibility = "visible";
+                    }
+                    else{
+                        e.style.visibility = "hidden";
+
+                    }
+                }
+            </script>
+            
+        </form>
+    </body>
+</html>
