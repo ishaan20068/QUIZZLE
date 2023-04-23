@@ -1,0 +1,174 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body{
+    background: white;
+}
+
+.Navigation-menu {
+    background: white;
+}
+
+.Navigation-menu:after {
+    content:'';
+    clear:both;
+    display: table;
+}
+
+.Navigation-menu ul {
+    float: right;
+    list-style: none;
+    margin-right: 90px;
+    position: relative;
+}
+
+.Navigation-menu ul li {
+    float: left;
+    display: block;
+    margin: 0 5px;
+}
+
+.Navigation-menu ul li a {
+    color: black;
+    text-decoration: none;
+    line-height: 70px;
+    font-size: 18px;
+    padding: 8px 12px;
+}
+
+.Navigation-menu ul ul {
+    position: absolute;
+    top: 90px;
+    background-color:rgba(11, 144, 246, 0.979);
+    opacity: 0;
+    visibility: hidden;
+    border: 1px solid black;
+    border-top: none;
+    transition: top 0.3s;
+}
+
+.Navigation-menu ul li:hover > ul {
+    top: 70px;
+    opacity: 1;
+    visibility: visible;
+}
+
+.Navigation-menu ul ul li {
+    position: relative;
+    margin: 0px;
+    width: 180px;
+    float: none;
+    display: list-item;
+    border-bottom: 1px solid rgba(0,0,0,0.3);
+}
+
+.Navigation-menu ul ul li a {
+    line-height: 50px;
+}
+
+.Navigation-menu ul ul li a:hover {
+    color: cyan;
+    box-shadow: none;
+}
+
+.Navigation-menu .logo {
+    float: left;
+    color: white;
+    font-size: 27px;
+    font-weight: 70px;
+    line-height: 70px;
+    padding-left: 60px;
+}
+
+.Navigation-menu ul li a:hover {
+    border-radius: 5px;
+    color: cyan;
+    box-shadow: 0 0 5px #33ffff, 0 0 5px #66ffff;
+}
+
+.Navigation-menu .Login {
+    font-size: 18px;
+    width: 90px;
+    height: 42px;
+    background-color: lightblue;
+    border-radius: 15%;
+}
+
+.Navigation-menu .Login_Link:hover {
+    box-shadow: none;
+    border-radius: 0px;
+}
+
+.show, .icon, input {
+    display: none;
+}
+
+@media all and (max-width: 970px) {
+    .Navigation-menu ul {
+        margin-right: 0px;
+        float: left;
+    }
+    .Navigation-menu .logo {
+        padding-left: 30px;
+        width: 100%;
+    }
+    .Navigation-menu ul li, .Navigation-menu ul ul li {
+        display: block;
+        width: 100%;
+    }
+    .Navigation-menu ul ul {
+        top: 70px;
+        position: static;
+        border-top: none;
+        float: none;
+        display: none;
+        opacity: 1;
+        visibility: visible;
+    }
+    .Navigation-menu ul ul a {
+        padding-left: 50px;
+    }
+    .Navigation-menu ul ul li {
+        border-bottom: none;
+    }
+    .show {
+        display: block;
+        color: black;
+        font-size: 18px;
+        padding: 0 20px;
+        line-height: 70px;
+        cursor: pointer;
+    }
+    .show:hover {
+        color: cyan;
+    }
+    .icon {
+        display: block;
+        color: white;
+        position: absolute;
+        right: 40px;
+        line-height: 70px;
+        font-size: 25px;
+        cursor: pointer;
+    }
+    .Navigation-menu ul li a:hover {
+        box-shadow: none; 
+    }
+    .show + a, ul {
+        display: none;
+    }
+    [id^=dropbutton]:checked + ul {
+        display: block;
+    }
+}
+
+img {
+    width: 30%;
+    margin: 1.5%;
+    height: 19rem;
+}
+
